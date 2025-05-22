@@ -1,0 +1,15 @@
+network:
+ ownnet:
+  name: ownnet
+  driver: bridge
+
+services:
+ db:
+
+ 
+ adminer: #this one only for testing now the mariadb
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
