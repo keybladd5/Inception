@@ -6,8 +6,8 @@ RUN apt-get update && apt-get install -y nginx && apt-get clean && rm -rf /var/l
 
 # Existen las carpetas sites-aviable y sites-enable, para poder visualizar el ejemplo debe estar en enable
 # COPY ./conf/nginx.conf /etc/nginx/sites-aviable/default
-COPY ./conf/nginx.conf /etc/nginx/sites-enabled/default
-
+COPY ./conf/nginx.conf /etc/nginx/sites-available/default
+RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 COPY ./test_html/index.html /usr/share/nginx/html/index.html
 
 # Se expone el puerto 80 de forma temporal, ya que para poder agregar el servicio de SSL/TLS
