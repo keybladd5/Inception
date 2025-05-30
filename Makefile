@@ -23,13 +23,15 @@ nginx:
 		openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
   		-keyout srcs/requirements/nginx/conf/ssl/polmarti.42.fr.key \
  		-out srcs/requirements/nginx/conf/ssl/polmarti.42.fr.crt \
-  		-subj "/C=ES/ST=Catalunya/L=Barcelona/O=42/CN=login.42.fr"; \
+  		-subj "/C=ES/ST=Catalunya/L=Barcelona/O=42/CN=polmarti.42.fr"; \
 		echo "Creando y lanzando el contenedor 'nginx-test'..."; \
 		docker build -t nginx-test ./srcs/requirements/nginx/ && \
-		docker run -d --name nginx-test -p 80:80 nginx-test; \
+		docker run -d --name nginx-test -p 80:80 -p 443:443 nginx-test; \
 	fi
 
 nginx-test: nginx
+	curl -k http://polmarti.42.fr
+	curl -k https://polmarti.42.fr	
 	docker exec -it nginx-test bash
 
 clean:
@@ -38,7 +40,7 @@ clean:
 	docker rmi -f $$(docker images -qa | grep -v 'bridge\|host\|none');\
 	docker volume rm $$(docker volume ls -q | grep -v 'bridge\|host\|none');\
 	docker network rm $$(docker network ls -q | grep -v 'bridge\|host\|none');
-	rm -rf srcs/requirements/nginx/ssl/*; \
-	rmdir  srcs/requirements/nginx/ssl
+	rm -rf srcs/requirements/nginx/conf/ssl/*; \
+	rmdir  srcs/requirements/nginx/conf/ssl
 
 .PHONY: nginx nginx-test clean
