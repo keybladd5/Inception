@@ -11,13 +11,13 @@ RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 COPY ./test_html/index.html /usr/share/nginx/html/index.html
 
 RUN mkdir -p /etc/nginx/ssl
-COPY ./conf/polmarti.42.fr.crt /etc/nginx/polmarti.42.fr.crt
+COPY ./conf/ssl/polmarti.42.fr.crt /etc/nginx/ssl/polmarti.42.fr.crt
 COPY ./conf/ssl/polmarti.42.fr.key /etc/nginx/ssl/polmarti.42.fr.key
 
 # Se expone el puerto 80 de forma temporal, ya que para poder agregar el servicio de SSL/TLS
 # se usa en el puerto 443
 EXPOSE 443
-#EXPOSE 80
+EXPOSE 80
 
 # Esta es la etapa de run, donde se ejecuta la imagen
 # El flag -g significa global y permite especificar una o mas directivas propias del .conf ("directiva1; directiva2; ...")
