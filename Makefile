@@ -30,6 +30,8 @@ nginx:
 	fi
 
 nginx-test: nginx
+	curl -k http://polmarti.42.fr
+	curl -k https://polmarti.42.fr	
 	docker exec -it nginx-test bash
 
 clean:
