@@ -1,5 +1,5 @@
 #Esta es la primera etapa de building
-FROM debian:bullseye-slim
+FROM debian:bullseye
 
 # Pendiente instalar tambien el ssl 
 RUN apt-get update && apt-get install -y --no-install-recommends nginx && apt-get clean && rm -rf /var/lib/apt/lists/*
