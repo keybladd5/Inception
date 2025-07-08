@@ -40,8 +40,8 @@ clean:
 	docker rmi -f $$(docker images -qa | grep -v 'bridge\|host\|none');\
 	docker volume rm $$(docker volume ls -q | grep -v 'bridge\|host\|none');\
 	docker network rm $$(docker network ls -q | grep -v 'bridge\|host\|none');
-	rm -rf srcs/requirements/nginx/conf/ssl/*; \
-	rmdir  srcs/requirements/nginx/conf/ssl
+	rm -rf srcs/requirements/nginx/ssl/*; \
+	rmdir  srcs/requirements/nginx/ssl
 build:
 	docker compose -f ./srcs/docker-compose.yml up --build
 .PHONY: nginx nginx-test clean
