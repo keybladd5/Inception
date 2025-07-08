@@ -12,7 +12,7 @@
 
 
 nginx:
-	if [ "$$(docker ps -q -f name=nginx-test)" ]; then \
+	@if [ "$$(docker ps -q -f name=nginx-test)" ]; then \
 		echo "El contenedor 'nginx-test' ya está corriendo."; \
 	elif [ "$$(docker ps -aq -f name=nginx-test)" ]; then \
 		echo "El contenedor 'nginx-test' existe pero está parado. Reiniciando..."; \
@@ -42,5 +42,6 @@ clean:
 	docker network rm $$(docker network ls -q | grep -v 'bridge\|host\|none');
 	rm -rf srcs/requirements/nginx/conf/ssl/*; \
 	rmdir  srcs/requirements/nginx/conf/ssl
-
+build:
+	docker compose -f ./srcs/docker-compose.yml up --build
 .PHONY: nginx nginx-test clean
