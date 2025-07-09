@@ -11,7 +11,7 @@ COPY ./conf/nginx.conf /etc/nginx/sites-available/default
 #pero solo los que están enlazados simbólicamente en sites-enabled son activados.
 RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 #se copia el ejemplo de web a levantar
-COPY ./test_html/index.html /usr/share/nginx/html/index.html
+#COPY ./test_html/index.html /usr/share/nginx/html/index.html
 
 #TSL SSL
 

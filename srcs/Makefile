@@ -29,10 +29,10 @@ nginx:
 		docker run -d --name nginx-test -p 80:80 -p 443:443 nginx-test; \
 	fi
 
-nginx-test: nginx
-	curl -k http://polmarti.42.fr
-	curl -k https://polmarti.42.fr	
-	docker exec -it nginx-test bash
+nginx-test: 
+	@curl -k http://polmarti.42.fr
+	@curl -k https://polmarti.42.fr	
+	@docker exec -it nginx-test bash
 
 clean:
 	-docker stop $$(docker ps -qa);\
@@ -40,8 +40,19 @@ clean:
 	docker rmi -f $$(docker images -qa | grep -v 'bridge\|host\|none');\
 	docker volume rm $$(docker volume ls -q | grep -v 'bridge\|host\|none');\
 	docker network rm $$(docker network ls -q | grep -v 'bridge\|host\|none');
-	rm -rf srcs/requirements/nginx/ssl/*; \
-	rmdir  srcs/requirements/nginx/ssl
+	rm -rf requirements/nginx/ssl/*; \
+	rmdir  requirements/nginx/ssl
+
 build:
-	docker compose -f ./srcs/docker-compose.yml up --build
+	@if [ ! -f srcs/requirements/nginx/ssl/polmarti.42.fr.key ] || [ ! -f srcs/requirements/nginx/ssl/polmarti.42.fr.crt ]; then \
+        echo "Creando certificados TSL para Nginx"; \
+        mkdir -p srcs/requirements/nginx/ssl; \
+        openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+          -keyout srcs/requirements/nginx/ssl/polmarti.42.fr.key \
+         -out srcs/requirements/nginx/ssl/polmarti.42.fr.crt \
+          -subj "/C=ES/ST=Catalunya/L=Barcelona/O=42/CN=polmarti.42.fr"; \
+    else \
+        echo "Los certificados ya existen. No se crearán nuevamente."; \
+    fi; \
+    docker compose up --build
 .PHONY: nginx nginx-test clean
