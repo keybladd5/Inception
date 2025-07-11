@@ -10,49 +10,44 @@
 #                                                                              #
 # **************************************************************************** #
 
+ssl:
+	@if [ ! -f requirements/nginx/ssl/polmarti.42.fr.key ] || [ ! -f requirements/nginx/ssl/polmarti.42.fr.crt ]; then \
+        echo "Creando certificados TSL para Nginx"; \
+        mkdir -p requirements/nginx/ssl; \
+        openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+          -keyout requirements/nginx/ssl/polmarti.42.fr.key \
+         -out requirements/nginx/ssl/polmarti.42.fr.crt \
+          -subj "/C=ES/ST=Catalunya/L=Barcelona/O=42/CN=polmarti.42.fr"; \
+    else \
+        echo "Los certificados ya existen. No se crearán nuevamente."; \
+    fi; 
 
-nginx:
+nginx: ssl
 	@if [ "$$(docker ps -q -f name=nginx-test)" ]; then \
 		echo "El contenedor 'nginx-test' ya está corriendo."; \
 	elif [ "$$(docker ps -aq -f name=nginx-test)" ]; then \
 		echo "El contenedor 'nginx-test' existe pero está parado. Reiniciando..."; \
 		docker start nginx-test; \
-	else \
-		echo "Creando certificados TSL para Nginx"; \
-		mkdir -p srcs/requirements/nginx/ssl; \
-		openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-  		-keyout srcs/requirements/nginx/ssl/polmarti.42.fr.key \
- 		-out srcs/requirements/nginx/ssl/polmarti.42.fr.crt \
-  		-subj "/C=ES/ST=Catalunya/L=Barcelona/O=42/CN=polmarti.42.fr"; \
-		echo "Creando y lanzando el contenedor 'nginx-test'..."; \
-		docker build -t nginx-test ./srcs/requirements/nginx/ && \
-		docker run -d --name nginx-test -p 80:80 -p 443:443 nginx-test; \
+		docker build -t nginx-test .requirements/nginx/ && \
+		docker run -d --name nginx-test -p 80:80 -p 443:443 nginx; \
 	fi
 
 nginx-test: 
 	@curl -k http://polmarti.42.fr
 	@curl -k https://polmarti.42.fr	
-	@docker exec -it nginx-test bash
+	@docker exec -it nginx bash
 
 clean:
-	-docker stop $$(docker ps -qa);\
-	docker rm $$(docker ps -qa);\
-	docker rmi -f $$(docker images -qa | grep -v 'bridge\|host\|none');\
-	docker volume rm $$(docker volume ls -q | grep -v 'bridge\|host\|none');\
-	docker network rm $$(docker network ls -q | grep -v 'bridge\|host\|none');
-	rm -rf requirements/nginx/ssl/*; \
-	rmdir  requirements/nginx/ssl
+	@-docker stop $$(docker ps -qa) 2>/dev/null || true
+	@docker rm $$(docker ps -qa) 2>/dev/null || true
+	@docker rmi -f $$(docker images -qa) 2>/dev/null || true
+	@if [ "$$(docker volume ls -q)" ]; then docker volume rm $$(docker volume ls -q); fi
+	@docker network prune -f
+	@rm -rf requirements/nginx/ssl/* 2>/dev/null || true
+	@rmdir requirements/nginx/ssl 2>/dev/null || true
+	@echo "Stoped ps, rm images, volumes and networks";
+	
+build: ssl
+	@docker compose up --build
 
-build:
-	@if [ ! -f srcs/requirements/nginx/ssl/polmarti.42.fr.key ] || [ ! -f srcs/requirements/nginx/ssl/polmarti.42.fr.crt ]; then \
-        echo "Creando certificados TSL para Nginx"; \
-        mkdir -p srcs/requirements/nginx/ssl; \
-        openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-          -keyout srcs/requirements/nginx/ssl/polmarti.42.fr.key \
-         -out srcs/requirements/nginx/ssl/polmarti.42.fr.crt \
-          -subj "/C=ES/ST=Catalunya/L=Barcelona/O=42/CN=polmarti.42.fr"; \
-    else \
-        echo "Los certificados ya existen. No se crearán nuevamente."; \
-    fi; \
-    docker compose up --build
 .PHONY: nginx nginx-test clean

@@ -1,8 +1,8 @@
 FROM debian:bullseye
 
-RUN apt-get update && apt-get install -y --no-install-recommends php-fpm
+RUN apt-get update && apt-get install -y php-fpm
 
-COPY www.conf /etc/php/7.4/fpm/pool.d/.
+COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/.
 
 RUN mkdir -p /run/php
 

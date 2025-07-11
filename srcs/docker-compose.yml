@@ -6,11 +6,21 @@ services:
     - "80:80"
     - "443:443"
   volumes:
-      - /web:/var/www/html
+      - ./web:/var/www/html
+  networks:
+      - inception
+  depends_on:
+      - wordpress
  wordpress:
   build: requirements/wordpress/.
   container_name: wp-php
   volumes:
-      - /web:/var/www/html
-
+      - ./web:/var/www/html
+  networks:
+      - inception
+  expose:
+      - "9000"
+networks:
+  inception:
+   driver: bridge
 
