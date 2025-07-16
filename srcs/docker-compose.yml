@@ -1,26 +1,44 @@
 services:
  nginx:
-  build: requirements/nginx/.
-  container_name: nginx
-  ports:
-    - "80:80"
-    - "443:443"
-  volumes:
-      - ./web:/var/www/html
-  networks:
-      - inception
-  depends_on:
-      - wordpress
+    build: requirements/nginx/.
+    container_name: nginx
+    image: nginx
+    ports:
+        - "80:80"
+        - "443:443"
+    volumes:
+        - ./web:/var/www/html #remember should be (host vm)/home/polmarti/data
+    networks:
+        - inception
+    depends_on:
+        - wordpress
+    restart: always
+
  wordpress:
-  build: requirements/wordpress/.
-  container_name: wp-php
-  volumes:
-      - ./web:/var/www/html
-  networks:
-      - inception
-  expose:
-      - "9000"
+    build: requirements/wordpress/.
+    container_name: wordpress
+    image: wordpress
+    env_file:
+        - .env
+    volumes:
+        - ./web:/var/www/html #remember should be (host vm)/home/polmarti/data
+    networks:
+        - inception
+    expose:
+        - "9000"
+    depends_on:
+        - mariadb
+    restart: always
+
+ mariadb:
+    build: requirements/mariadb/.
+    container_name: mariadb
+    image: mariadb
+    env_file:
+        - .env
+    restart: always
+
 networks:
-  inception:
-   driver: bridge
+    inception:
+        driver: bridge
 
