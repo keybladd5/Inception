@@ -6,10 +6,11 @@ RUN sed -i 's|user                    = mysql|user                    = root|' /
 RUN sed -i 's|bind-address            = 127.0.0.1|#bind-address            = 127.0.0.1|' /etc/mysql/mariadb.conf.d/50-server.cnf
 # insertar esto socket                 = /run/mysqld/mysqld.sock
 # insertar esto port 3306
-RUN mkdir -p /run/mysqld 
+RUN mkdir -p /run/mysqld
+COPY ./tools/mariadb.sh /usr/local/bin
+RUN chmod 777 /usr/local/bin/mariadb.sh
 
-
-CMD ["mysqld"]
+CMD ["sh",  "/usr/local/bin/mariadb.sh"]
 #ENTRYPOINT ["mysql -u root"]
 #RUN service mariadb start
 #RUN mysql -u root o ENTRYPOINT [ "mysql -u root" ]?
