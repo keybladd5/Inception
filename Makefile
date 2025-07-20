@@ -43,6 +43,7 @@ clean:
 	@rmdir srcs/requirements/nginx/ssl 2>/dev/null || true
 	@sudo rm -rf /home/polmarti/data/mariadb/*
 	@sudo rm -rf /home/polmarti/data/wordpress/*
+	@tree /home/polmarti/data
 	@echo "Stoped ps, rm images, volumes and networks";
 	
 debug: ssl volumes
