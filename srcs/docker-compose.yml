@@ -27,7 +27,8 @@ services:
     expose:
         - "9000"
     depends_on:
-        - mariadb
+        mariadb:
+            condition: service_healthy
     restart: always
 
  mariadb:
@@ -36,8 +37,16 @@ services:
     image: mariadb
     volumes:
         - mariadb:/var/lib/mysql
+    networks:
+        - inception
     env_file:
         - .env
+    healthcheck:
+        test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+        interval: 5s
+        timeout: 5s
+        retries: 10
+        start_period: 3s
     restart: always
 
 volumes:
