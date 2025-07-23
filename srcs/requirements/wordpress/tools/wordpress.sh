@@ -18,9 +18,9 @@ fi
 
 # Complete WordPress installation with site settings and admin data
 if ! wp core is-installed --allow-root; then
-	wp core install --url=${DOMAIN_NAME} --title=inception --admin_user=${WORDPRESS_ADMIM} --admin_password=${WORDPRESS_ADMIM_PASS} --admin_email=${WORDPRESS_ADMIM_EMAIL} --allow-root
+	wp core install --url=${DOMAIN_NAME} --title=inception --admin_user=${WORDPRESS_ADMIM} --admin_password=${WORDPRESS_ADMIM_PASS} --admin_email=${WORDPRESS_ADMIM_EMAIL} --skip-email --allow-root
 	# End WordPress installation with user creation
-	wp user create $WORDPRESS_USER $WORDPRESS_EMAIL --role=author --user_pass=$WORDPRESS_USER_PASS --allow-root
+	wp user create ${WORDPRESS_USER} ${WORDPRESS_EMAIL} --role=author --user_pass=$WORDPRESS_USER_PASS --allow-root
 fi
 
 #El flag "-F" lanza el servicio en primer plano = pid 1
