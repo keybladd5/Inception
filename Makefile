@@ -31,7 +31,6 @@ ssl:
 test: 
 	@curl -k http://polmarti.42.fr
 	@curl -k https://polmarti.42.fr	
-	@docker exec -it nginx bash
 
 clean:
 	@-docker stop $$(docker ps -qa) 2>/dev/null || true
@@ -53,4 +52,4 @@ build: ssl volumes
 down:
 	@docker compose -f srcs/docker-compose.yml down 
 
-.PHONY: nginx nginx-test clean
+.PHONY: volumes ssl test clean debug build down
