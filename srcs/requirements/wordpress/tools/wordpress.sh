@@ -23,5 +23,5 @@ if ! wp core is-installed --allow-root; then
 	wp user create ${WORDPRESS_USER} ${WORDPRESS_EMAIL} --role=author --user_pass=$WORDPRESS_USER_PASS --allow-root
 fi
 
-#El flag "-F" lanza el servicio en primer plano = pid 1
+# The "-F" flag launches the service in foreground = pid 1
 php-fpm7.4 -F
