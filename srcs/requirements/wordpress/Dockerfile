@@ -19,6 +19,3 @@ COPY ./tools/wordpress.sh /usr/local/bin
 RUN chmod 777 /usr/local/bin/wordpress.sh
 
 ENTRYPOINT ["/usr/local/bin/wordpress.sh"]
-
-#El flag "-F" lanza el servicio en primer plano = pid 1
-#CMD ["php-fpm7.4", "-F"] 
