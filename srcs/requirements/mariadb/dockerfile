@@ -4,19 +4,10 @@ RUN apt-get update && apt-get install -y mariadb-server && apt-get clean && rm -
 
 RUN sed -i 's|user                    = mysql|user                    = root|' /etc/mysql/mariadb.conf.d/50-server.cnf
 RUN sed -i 's|bind-address            = 127.0.0.1|#bind-address            = 127.0.0.1|' /etc/mysql/mariadb.conf.d/50-server.cnf
-# insertar esto socket                 = /run/mysqld/mysqld.sock
+# insertar esto socket                = /run/mysqld/mysqld.sock
 # insertar esto port 3306
 RUN mkdir -p /run/mysqld
 COPY ./tools/mariadb.sh /usr/local/bin
 RUN chmod 777 /usr/local/bin/mariadb.sh
 
 ENTRYPOINT ["/usr/local/bin/mariadb.sh"]
-#ENTRYPOINT ["mysql -u root"]
-#RUN service mariadb start
-#RUN mysql -u root o ENTRYPOINT [ "mysql -u root" ]?
-
-#to build the dockerfile -> $docker build -t test . --debug
-
-#
-# mysql_install_db crea ese directorio solo (/var/lib/mysql)
-#
