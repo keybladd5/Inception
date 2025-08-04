@@ -6,6 +6,14 @@ set -ex
 # Navigate to web server root directory
 cd /var/www/html
 
+MYSQL_USER=$(cat /run/secrets/MYSQL_USER)
+MYSQL_PASSWORD=$(cat /run/secrets/MYSQL_PASSWORD)
+WORDPRESS_ADMIN=$(cat /run/secrets/WORDPRESS_ADMIN)
+WORDPRESS_ADMIN_PASS=$(cat /run/secrets/WORDPRESS_ADMIN_PASS)
+WORDPRESS_ADMIN_EMAIL=$(cat /run/secrets/WORDPRESS_ADMIN_EMAIL)
+WORDPRESS_USER=$(cat /run/secrets/WORDPRESS_USER)
+WORDPRESS_EMAIL=$(cat /run/secrets/WORDPRESS_EMAIL)
+WORDPRESS_USER_PASS=$(cat /run/secrets/WORDPRESS_USER_PASS)
 # Download WordPress core files
 if [ ! -f /var/www/html/wp-settings.php ]; then
 	wp core download --allow-root
