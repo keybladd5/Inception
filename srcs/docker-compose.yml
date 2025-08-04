@@ -35,6 +35,15 @@ services:
         timeout: 10s
         retries: 3
         start_period: 15s
+    secrets:
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - WORDPRESS_ADMIN
+      - WORDPRESS_ADMIN_PASS
+      - WORDPRESS_ADMIN_EMAIL
+      - WORDPRESS_USER
+      - WORDPRESS_USER_PASS
+      - WORDPRESS_EMAIL
     restart: always
 
  mariadb:
@@ -53,6 +62,11 @@ services:
         timeout: 5s
         retries: 10
         start_period: 3s
+    secrets:
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+      - MYSQL_ROOT_USER
+      - MYSQL_ROOT_PASSWORD
     restart: always
 
 volumes:
@@ -75,3 +89,24 @@ networks:
     inception:
         driver: bridge
 
+secrets:
+  WORDPRESS_ADMIN:
+    file: ../secrets/wp_admin_user.txt
+  WORDPRESS_ADMIN_PASS:
+    file: ../secrets/wp_admin_pass.txt
+  WORDPRESS_ADMIN_EMAIL:
+    file: ../secrets/wp_admin_email.txt
+  WORDPRESS_USER:
+    file: ../secrets/wp_user.txt
+  WORDPRESS_USER_PASS:
+    file: ../secrets/wp_user_pass.txt
+  WORDPRESS_EMAIL:
+    file: ../secrets/wp_user_email.txt
+  MYSQL_USER:
+    file: ../secrets/db_user.txt
+  MYSQL_PASSWORD:
+    file: ../secrets/db_user_pass.txt
+  MYSQL_ROOT_USER:
+    file: ../secrets/db_root_user.txt
+  MYSQL_ROOT_PASSWORD:
+    file: ../secrets/db_root_pass.txt
