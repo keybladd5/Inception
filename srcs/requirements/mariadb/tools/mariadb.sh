@@ -1,9 +1,14 @@
 #!/bin/sh
 
-set -ex 
+set -ex
+
 
 if [ ! -d "/var/lib/mysql/${MYSQL_DATABASE}" ];	# Checks if the database already exists
 then
+	MYSQL_ROOT_USER=$(cat /run/secrets/MYSQL_ROOT_USER)
+	MYSQL_ROOT_PASSWORD=$(cat /run/secrets/MYSQL_ROOT_PASSWORD)
+	MYSQL_USER=$(cat /run/secrets/MYSQL_USER)
+	MYSQL_PASSWORD=$(cat /run/secrets/MYSQL_PASSWORD)
 	mysql_install_db # Creates /var/lib/mysql directory structure
 	mysqld_safe --skip-networking & # Start MySQL service
 	sleep 5 # Must wait for database to be ready 
