@@ -1,37 +1,25 @@
-#Esta es la primera etapa de building
 FROM debian:bullseye
 
-# Pendiente instalar tambien el ssl 
+# Install nginx
 RUN apt-get update && apt-get install -y --no-install-recommends nginx && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Existen las carpetas sites-aviable y sites-enable, para poder visualizar el ejemplo debe estar en enable
-# COPY ./conf/nginx.conf /etc/nginx/sites-aviable/default
+# Copy nginx config file
 COPY ./conf/nginx.conf /etc/nginx/sites-available/default
-#En Nginx, los archivos de configuración de sitios se colocan en sites-available, 
-#pero solo los que están enlazados simbólicamente en sites-enabled son activados.
+
+# Create symbolic link to enable the site
 RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
-#se copia el ejemplo de web a levantar
-#COPY ./test_html/index.html /usr/share/nginx/html/index.html
 
-#TSL SSL
-
-#crear un directorio junto con 
-#todos los directorios intermedios necesarios en la ruta, si no existen previamente.
+# SSL setup
 RUN mkdir -p /etc/nginx/ssl
-#Copia los certificados creados previamente a traves del Makefile(Host/VM) en el contenedor (.crt clave publica y .key clave privada)
+
+# Copy SSL certificates
 COPY ./ssl/polmarti.42.fr.crt /etc/nginx/ssl/polmarti.42.fr.crt 
 COPY ./ssl/polmarti.42.fr.key /etc/nginx/ssl/polmarti.42.fr.key
 
-#Puerto expuesto segun protocolo SSL
-EXPOSE 443
-# Se expone el puerto 80 de forma temporal, ya que para poder agregar el servicio de SSL/TLS
-# se usa en el puerto 443
-#EXPOSE 80
 
-# Esta es la etapa de run, donde se ejecuta la imagen
-# El flag -g significa global y permite especificar una o mas directivas propias del .conf ("directiva1; directiva2; ...")
-# Por defecto nginx termina al lanzarlo (se ejecuta en segundo plano), con las opcion de daemon off se queda en primer plano como PID 1
-# Esto es relevant porque se prioriza trabajar con u solo proceso al tener el servicio en u contenedor, sin esta opcion nginx abriria nuevos procesos
-# durante la ejecucion
+# Expose HTTPS port
+EXPOSE 443
+
+# Start nginx in foreground mode
 CMD ["nginx", "-g", "daemon off;"]
 
