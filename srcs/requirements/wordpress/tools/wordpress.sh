@@ -18,7 +18,7 @@ fi
 
 # Complete WordPress installation with site settings and admin data
 if ! wp core is-installed --allow-root; then
-	wp core install --url=${DOMAIN_NAME} --title=inception --admin_user=${WORDPRESS_ADMIM} --admin_password=${WORDPRESS_ADMIM_PASS} --admin_email=${WORDPRESS_ADMIM_EMAIL} --skip-email --allow-root
+	wp core install --url=${DOMAIN_NAME} --title=inception --admin_user=${WORDPRESS_ADMIN} --admin_password=${WORDPRESS_ADMIN_PASS} --admin_email=${WORDPRESS_ADMIN_EMAIL} --skip-email --allow-root
 	# End WordPress installation with user creation
 	wp user create ${WORDPRESS_USER} ${WORDPRESS_EMAIL} --role=author --user_pass=$WORDPRESS_USER_PASS --allow-root
 fi
