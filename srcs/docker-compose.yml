@@ -24,8 +24,6 @@ services:
         - wordpress:/var/www/html
     networks:
         - inception
-    expose:
-        - "9000"
     depends_on:
         mariadb:
             condition: service_healthy
