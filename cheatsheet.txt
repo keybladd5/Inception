@@ -23,3 +23,5 @@ Docker image cmds
 
 - docker image rm -f "image name/id", //delete the image, if the image is running you need to kill it first.
 - docker image kill "name", //stop a running image
+
+- docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' nginx //obtener ip interna docker servicio concreto
